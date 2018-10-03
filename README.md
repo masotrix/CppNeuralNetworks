@@ -20,8 +20,14 @@
 Implementación de Testeo de operaciones binarias (AND,OR,NAND,SUM): 
 - /Perceptron/src/testBinaryOp/testBinaryOp.cpp
 
+Implementación de Testeo de sum gate (XOR): 
+- /Perceptron/src/testSumGate/testSumGate.cpp
+
 Ejecutable para testear operaciones bianarias:
 - /Perceptron/build/testBinaryOp/testBinaryOp
+
+Ejecutable para testear operaciones bianarias:
+- /Perceptron/build/testSumGate/testSumGate
 
 ## Ejercicio 2
 
