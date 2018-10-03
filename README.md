@@ -4,7 +4,7 @@
 
 <b>Perceptrón</b>
 
-1. Implementación de Perceptrón: 
+1. Implementación de Perceptrón, clases hijas y gates: 
   - /Perceptron/src/Perceptron/Perceptron.cpp
   - /Perceptron/src/Perceptron/Perceptron.h
 
