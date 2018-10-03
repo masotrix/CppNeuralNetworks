@@ -15,17 +15,17 @@ class Perceptron {
         const std::function<float(float)>&act=
         [](float s)->float {return s;});
 
-    float forward(const std::vector<float> &x);
+    virtual float forward(const std::vector<float> &x);
 
-    void backward(float y, float y_pred);
+    virtual void backward(float y, float y_pred);
 
-    void step(float gamma);
+    virtual void step(float gamma);
 
-    void train(const std::vector<std::vector<float>> &X,
+    virtual void train(const std::vector<std::vector<float>> &X,
         const std::vector<float> &Y, int EPOCHS,
         std::vector<float> &loss);
 
-    float test(const std::vector<std::vector<float>> &X,
+    virtual float test(const std::vector<std::vector<float>> &X,
         const std::vector<float> &Y);
 
     static float testOp(
@@ -33,5 +33,43 @@ class Perceptron {
       const std::function<float(float)> &act,
       const std::function<float(float, float)> &op,
       const std::vector<std::vector<float>> &X);
+};
 
+class TwoInputPerceptron: public Perceptron {
+
+  public:
+    TwoInputPerceptron();
+    TwoInputPerceptron(float w1, float w2, float b,
+        const std::function<float(float)>&act=
+        [](float s)->float {return s;});
+};
+
+class ANDPerceptron: public TwoInputPerceptron {
+  public: ANDPerceptron();
+};
+
+class ORPerceptron: public TwoInputPerceptron {
+  public: ORPerceptron();
+};
+
+class NANDPerceptron: public TwoInputPerceptron {
+  public: NANDPerceptron();
+};
+
+class SUMPerceptron: public TwoInputPerceptron {
+  public: SUMPerceptron();
+};
+
+class XORGate {
+
+  private:
+    std::unique_ptr<NANDPerceptron> _nandPer;
+    std::unique_ptr<ORPerceptron> _orPer;
+    std::unique_ptr<TwoInputPerceptron> _adderPer;
+ 
+  public:
+    XORGate();   
+    virtual float test(const std::vector<std::vector<float>> &X,
+        const std::vector<float> &Y);
+   
 };
