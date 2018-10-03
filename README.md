@@ -26,7 +26,7 @@ Implementación de Testeo de sum gate (XOR):
 Ejecutable para testear operaciones bianarias:
 - /Perceptron/build/testBinaryOp/testBinaryOp
 
-Ejecutable para testear operaciones bianarias:
+Ejecutable para testear sum gate:
 - /Perceptron/build/testSumGate/testSumGate
 
 ## Ejercicio 2
