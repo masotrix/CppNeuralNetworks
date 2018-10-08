@@ -1,6 +1,7 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#include <memory>
 #include <Perceptron.h>
 using namespace std;
 
@@ -26,9 +27,9 @@ int main() {
   }
 
 
-  Perceptron *per = new Perceptron(2);
+  unique_ptr<TwoInputPerceptron> per(new TwoInputPerceptron());
   vector<float> loss; int EPOCHS = 20;
-  per->train(X[0],Y[0],EPOCHS,loss);
+  per->train(X[0],Y[0],0.00001,EPOCHS,loss);
   
   ofstream ofile("loss.txt");
   for (int i=0; i<loss.size(); i++) {
@@ -40,6 +41,4 @@ int main() {
   ofile.close();
 
   cout << per->test(X[1], Y[1]) << endl;
-
-  delete per;
 }
