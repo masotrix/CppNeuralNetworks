@@ -4,7 +4,7 @@
 
 <b>Perceptrón</b>
 
-1. Implementación de Perceptrón: 
+1. Implementación de Perceptrón, clases hijas y gates: 
   - /Perceptron/src/Perceptron/Perceptron.cpp
   - /Perceptron/src/Perceptron/Perceptron.h
 
@@ -20,8 +20,14 @@
 Implementación de Testeo de operaciones binarias (AND,OR,NAND,SUM): 
 - /Perceptron/src/testBinaryOp/testBinaryOp.cpp
 
+Implementación de Testeo de sum gate (XOR): 
+- /Perceptron/src/testSumGate/testSumGate.cpp
+
 Ejecutable para testear operaciones bianarias:
 - /Perceptron/build/testBinaryOp/testBinaryOp
+
+Ejecutable para testear sum gate:
+- /Perceptron/build/testSumGate/testSumGate
 
 ## Ejercicio 2
 
