@@ -2,11 +2,11 @@
 
 <b>Autor:</b> Ignacio Matías Haeussler Risco
 
-<b>Perceptrón</b>
+<b>Perceptrón y Sigmoid Neuron</b>
 
-1. Implementación de Perceptrón, clases hijas y gates:
-  - /Perceptron/src/Perceptron/Perceptron.h
-  - /Perceptron/src/Perceptron/Perceptron.cpp
+1. Implementación de Perceptrón y Sigmoid neuron, clases hijas y gates:
+  - /Neuron/src/Neuron.h
+  - /Neuron/src/Neuron.cpp
   
 2. Implementación funcionalidad para graficar:
   - /Plot/Plot.h
@@ -16,27 +16,50 @@
   - /Makefile
 
 3. Ejecutables perceptrón:
-  - /Perceptron/build/
+  - /Neuron/build/Perceptron
 
+4. Ejecutables sigmoid neuron:
+  - /Neuron/build/SigmoidNeuron
 
 ## Ejercicio 1
 
 Implementación de Testeo de operaciones binarias (AND,OR,NAND,SUM): 
-  - /Perceptron/src/testBinaryOp/testBinaryOp.cpp
+  - /Neuron/src/Perceptron/testBinaryOp/testBinaryOp.cpp
 
 Implementación de Testeo de sum gate (XOR): 
-  - /Perceptron/src/testSumGate/testSumGate.cpp
+  - /Neuron/src/Perceptron/testSumGate/testSumGate.cpp
 
 Ejecutable para testear operaciones bianarias:
-  - /Perceptron/build/testBinaryOp/testBinaryOp
+  - /Neuron/build/Perceptron/testBinaryOp/testBinaryOp
 
 Ejecutable para testear sum gate:
-  - /Perceptron/build/testSumGate/testSumGate
+  - /Neuron/build/Perceptron/testSumGate/testSumGate
 
 ## Ejercicio 2
 
 Implementación gráficos de distribución y entrenamiento
-  - /Perceptron/src/testTrain/testTrainPlot.cpp
+  - /Neuron/src/Perceptron/testTrain/testTrainPlot.cpp
   
 Ejecutable para generar gráficos de distribución y entrenamiento
-  - /Perceptron/build/testTrain/testTrainPlot
+  - /Neuron/build/Perceptron/testTrain/testTrainPlot
+
+## Ejercicio 3
+
+Implementación de Testeo de operaciones binarias (AND,OR,NAND,SUM): 
+  - /Neuron/src/SigmoidNeuron/testBinaryOp/testBinaryOp.cpp
+
+Implementación de Testeo de sum gate (XOR): 
+  - /Neuron/src/SigmoidNeuron/testSumGate/testSumGate.cpp
+
+Ejecutable para testear operaciones bianarias:
+  - /Neuron/build/SigmoidNeuron/testBinaryOp/testBinaryOp
+
+Ejecutable para testear sum gate:
+  - /Neuron/build/SigmoidNeuron/testSumGate/testSumGate
+  
+Implementación gráficos de distribución y entrenamiento
+  - /Neuron/src/SigmoidNeuron/testTrain/testTrainPlot.cpp
+  
+Ejecutable para generar gráficos de distribución y entrenamiento
+  - /Neuron/build/SigmoidNeuron/testTrain/testTrainPlot
+
