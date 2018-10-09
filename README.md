@@ -21,7 +21,7 @@
 4. Ejecutables sigmoid neuron:
   - /Neuron/build/SigmoidNeuron
 
-## Ejercicio 1
+## Ejercicio 1 (Perceptron binary operations)
 
 Implementación de Testeo de operaciones binarias (AND,OR,NAND,SUM): 
   - /Neuron/src/Perceptron/testBinaryOp/testBinaryOp.cpp
@@ -35,7 +35,7 @@ Ejecutable para testear operaciones bianarias:
 Ejecutable para testear sum gate:
   - /Neuron/build/Perceptron/testSumGate/testSumGate
 
-## Ejercicio 2
+## Ejercicio 2 (Perceptron Training)
 
 Implementación gráficos de distribución y entrenamiento
   - /Neuron/src/Perceptron/testTrain/testTrainPlot.cpp
@@ -43,7 +43,7 @@ Implementación gráficos de distribución y entrenamiento
 Ejecutable para generar gráficos de distribución y entrenamiento
   - /Neuron/build/Perceptron/testTrain/testTrainPlot
 
-## Ejercicio 3
+## Ejercicio 3 (Sigmoid Neuron binary operations and training)
 
 Implementación de Testeo de operaciones binarias (AND,OR,NAND,SUM): 
   - /Neuron/src/SigmoidNeuron/testBinaryOp/testBinaryOp.cpp
