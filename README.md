@@ -20,6 +20,11 @@
 
 4. Ejecutables sigmoid neuron:
   - /Neuron/build/SigmoidNeuron
+  
+<b>Notas</b>
+
+  - OpenCV es utilizado para realizar gráficos.
+  - Ejecutables de testeo entregan output si hubo algún error.
 
 ## Ejercicio 1 (Perceptron binary operations)
 
