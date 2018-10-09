@@ -40,12 +40,13 @@ int main() {
         4,vector<vector<float>>());
 
   auto aper = make_unique<TwoInputSigmoidNeuron>();
-  vector<float> aloss; float alr = 0.0001;
-  vector<float> classTests = {2, 5, 10, 50}; 
+  vector<float> aloss; float alr = 0.01;
+  vector<float> classTests = {2, 5, 50, 10000}; 
   int iniIte = 0;
   for (int i=0; i<classTests.size(); i++) {
     for (int j=iniIte; j<classTests[i]; j++) {
-      aper->train({X[0][j]},{Y[0][j]},alr,1,aloss);
+      aper->train({X[0][j%samples[0]]},
+          {Y[0][j%samples[0]]},alr,1,aloss);
     }
 
     for (int j=0; j<samples[0]; j++) {

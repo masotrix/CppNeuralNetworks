@@ -41,11 +41,12 @@ int main() {
 
   auto aper = make_unique<TwoInputPerceptron>();
   vector<float> aloss; float alr = 0.0001;
-  vector<float> classTests = {2, 5, 10, 50}; 
+  vector<float> classTests = {2, 5, 50, 10000}; 
   int iniIte = 0;
   for (int i=0; i<classTests.size(); i++) {
     for (int j=iniIte; j<classTests[i]; j++) {
-      aper->train({X[0][j]},{Y[0][j]},alr,1,aloss);
+      aper->train({X[0][j%samples[0]]},
+          {Y[0][j%samples[0]]},alr,1,aloss);
     }
 
     for (int j=0; j<samples[0]; j++) {
@@ -84,7 +85,7 @@ int main() {
   vector<unique_ptr<TwoInputPerceptron>> pers;
   vector<vector<float>> loss(4,vector<float>()),
       accs(4,vector<float>());
-  vector<float> lrs = {0.0001,0.001,0.01,1.0};
+  vector<float> lrs = {0.000001,0.0001,0.01,1.0};
   for (int i=0; i<4; i++) {
     pers.push_back(make_unique<TwoInputPerceptron>());
   }

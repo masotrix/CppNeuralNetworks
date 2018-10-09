@@ -2,6 +2,7 @@ CC=g++
 CFLAGS=-std=c++14 -g -INeuron/src -IPlot
 CFLAGS+=`pkg-config --cflags --libs opencv`
 PERBUILD= Neuron/build/Perceptron
+SIGMBUILD= Neuron/build/SigmoidNeuron
 NEUSRC= Neuron/src
 PERSRC= Neuron/src/Perceptron
 SIGMSRC= Neuron/src/SigmoidNeuron
@@ -30,7 +31,12 @@ all: \
 	$(PERBUILD)/testTrain/generateData \
 	$(PERBUILD)/testBinaryOp/testBinaryOp \
 	$(PERBUILD)/testSumGate/testSumGate \
-	$(PERBUILD)/testTrain/testTrainPlot
+	$(PERBUILD)/testTrain/testTrainPlot \
+	$(SIGMBUILD)/testTrain/testTrain \
+	$(SIGMBUILD)/testTrain/generateData \
+	$(SIGMBUILD)/testBinaryOp/testBinaryOp \
+	$(SIGMBUILD)/testSumGate/testSumGate \
+	$(SIGMBUILD)/testTrain/testTrainPlot
 
 %.o: %.cpp $(NEUDEPS)
 	$(CC) $< -c -o $@ $(CFLAGS)

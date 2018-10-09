@@ -5,38 +5,40 @@
 #include <assert.h>
 using namespace std;
 
-Neuron::Neuron(int inputs, function<float(float)> act):
+Neuron::Neuron(int inputs, function<float(float)> act,
+    function<float(float)> dact):
   _weights(vector<float>(inputs,0)),
   _wgrads(vector<float>(inputs)),
+  _bgrad(0), _s(0),
   _x(vector<float>(inputs)),
-  _bias(0), _act(act) {}
+  _bias(0), _act(act), _dact(dact) {}
 
 Neuron::Neuron(const vector<float> &weights, float bias,
-    function<float(float)> act):
+    function<float(float)> act, function<float(float)> dact):
   _weights(weights), 
   _wgrads(vector<float>(weights.size())),
+  _bgrad(0), _s(0),
   _x(vector<float>(weights.size())),
-  _bias(bias), _act(act) {}
+  _bias(bias), _act(act), _dact(dact) {}
 
 float Neuron::forward(const vector<float> &x) {
-  float output = 0; _x = x;
+  _s = 0; _x = x;
   for (int i=0; i<_weights.size(); i++)
-    output += _weights[i]*x[i];
-  if (output+_bias>0) return 1.0;
-  else return 0.0;
+    _s += _weights[i]*x[i];
+  return _act(_s+_bias);
 }
 
 void Neuron::backward(float y, float y_pred) {
   float diff = y_pred-y;
   for (int i=0; i<_weights.size(); i++)
-    _wgrads[i] = _x[i]*diff;
-  _bgrad = diff;
+    _wgrads[i] = diff*_dact(_s)*_x[i];
+  _bgrad = diff*_dact(_s);
 }
 
 void Neuron::step(float lr) {
   for (int i=0; i<_weights.size(); i++)
     _weights[i] -= lr*_wgrads[i];
-  _bias -= _bgrad;
+  _bias -= lr*_bgrad;
 }
 
 void Neuron::train(const vector<vector<float>> &X,
@@ -75,12 +77,16 @@ float Neuron::test(const vector<vector<float>> &X,
 }
 
 static function<float(float)> sigmoidAct =
-  [](float s)->float{return 1/(1+exp(-s));};
+  [](float s)->float{return 1./(1+exp(-s));};
+static function<float(float)> sigmoidClassifAct =
+  [](float s)->float{return sigmoidAct(s)>0.5? 1.0:0.0;};
+static function<float(float)> dsigmoidAct =
+  [](float s)->float{return sigmoidAct(s)*(s-sigmoidAct(s));};
 SigmoidNeuron::SigmoidNeuron(int inputs):
-  Neuron(inputs,sigmoidAct) {}
+  Neuron(inputs,sigmoidClassifAct,dsigmoidAct) {}
 SigmoidNeuron::SigmoidNeuron(
     const vector<float> &weights, float bias):
-  Neuron(weights,bias,sigmoidAct) {}
+  Neuron(weights,bias,sigmoidClassifAct,dsigmoidAct) {}
 TwoInputSigmoidNeuron::TwoInputSigmoidNeuron():
   SigmoidNeuron(2) {}
 TwoInputSigmoidNeuron::TwoInputSigmoidNeuron(
@@ -93,11 +99,14 @@ ORSigmoidNeuron::ORSigmoidNeuron():
 NANDSigmoidNeuron::NANDSigmoidNeuron():
   TwoInputSigmoidNeuron(-0.5,-0.5,1.0) {}
 
-static function<float(float)> signAct =
+static function<float(float)> thresholdClassifAct =
   [](float s)->float{return s>0? 1.0:0.0;};
-Perceptron::Perceptron(int inputs): Neuron(inputs,signAct) {}
+static function<float(float)> dthresholdClassifAct =
+  [](float s)->float{return 1.0;};
+Perceptron::Perceptron(int inputs):
+  Neuron(inputs,thresholdClassifAct,dthresholdClassifAct) {}
 Perceptron::Perceptron(const vector<float> &weights, float bias):
-  Neuron(weights,bias,signAct) {}
+  Neuron(weights,bias,thresholdClassifAct,dthresholdClassifAct) {}
 TwoInputPerceptron::TwoInputPerceptron(): Perceptron(2) {}
 TwoInputPerceptron::TwoInputPerceptron(
     float w1,float w2,float b): 

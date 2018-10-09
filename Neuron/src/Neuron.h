@@ -6,13 +6,14 @@ class Neuron {
 
   private:
     std::vector<float> _x, _weights, _wgrads;
-    float _bias, _bgrad;
-    std::function<float(float)> _act;
+    float _bias, _bgrad, _s;
+    std::function<float(float)> _act, _dact;
 
   public:
-    explicit Neuron(int inputs, std::function<float(float)>);
-    explicit Neuron(const std::vector<float> &, float,
+    explicit Neuron(int inputs, std::function<float(float)>,
         std::function<float(float)>);
+    explicit Neuron(const std::vector<float> &, float,
+        std::function<float(float)>,std::function<float(float)>);
     Neuron(const Neuron&) = delete;
     Neuron& operator=(const Neuron&) = delete;
     ~Neuron() = default;

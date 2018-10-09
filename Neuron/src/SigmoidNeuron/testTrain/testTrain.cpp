@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <memory>
-#include <Perceptron.h>
+#include <Neuron.h>
 using namespace std;
 
 #define trainN 1000

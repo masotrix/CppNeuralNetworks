@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-#include <Perceptron.h>
+#include <Neuron.h>
 #include <functional>
 #include <memory>
 #include <cmath>
@@ -14,7 +14,7 @@ int main() {
   auto andNeu = make_unique<ANDSigmoidNeuron>();
   andNeu->test(bitwiseX, {0.0,0.0,0.0,1.0}, true, "&& Test");
 
-  auto andNeu = make_unique<ORSigmoidNeuron>();
+  auto orNeu = make_unique<ORSigmoidNeuron>();
   orNeu->test(bitwiseX, {0.0,1.0,1.0,1.0}, true, "|| Test");
 
   auto nandNeu = make_unique<NANDSigmoidNeuron>();
