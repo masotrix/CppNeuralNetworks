@@ -48,7 +48,7 @@ Implementación gráficos de distribución y entrenamiento
 Ejecutable para generar gráficos de distribución y entrenamiento
   - /Neuron/build/Perceptron/testTrain/testTrainPlot
   
-Conclusions:
+Conclusiones:
   - El perceptrón no parece ser afectado por cambios en la tasa de
   aprendizaje.
   
@@ -72,7 +72,7 @@ Implementación gráficos de distribución y entrenamiento
 Ejecutable para generar gráficos de distribución y entrenamiento
   - /Neuron/build/SigmoidNeuron/testTrain/testTrainPlot
 
-Conclusions:
+Conclusiones:
   - La neurona sigmoide es capaz de implementar compuertas lógicas
   simples y, al combinar más de una, compuertas lógicas complejas.
   - El aprendizaje de la neurona sigmoide demuestra una sensibilidad
