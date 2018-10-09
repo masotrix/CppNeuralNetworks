@@ -23,7 +23,7 @@
   
 <b>Notas</b>
 
-  - OpenCV es utilizado para realizar gráficos.
+  - C++ OpenCV 3.4 es utilizado para realizar gráficos.
   - Ejecutables de testeo entregan output si hubo algún error.
 
 ## Ejercicio 1 (Perceptron binary operations)
