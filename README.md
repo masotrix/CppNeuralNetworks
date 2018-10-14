@@ -15,13 +15,13 @@
 2. Compilación (generan carpeta /build):
   - /Makefile
 
-3. Ejecutables perceptrón:
+4. Ejecutables perceptrón:
   - /build/Perceptron
 
-4. Ejecutables sigmoid neuron:
+5. Ejecutables sigmoid neuron:
   - /build/SigmoidNeuron
   
-5. Ejecutables red neuronal:
+6. Ejecutables red neuronal:
   - /build/Network
   
 <b>Notas</b>
