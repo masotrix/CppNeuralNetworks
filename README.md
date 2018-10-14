@@ -12,7 +12,7 @@
   - /src/Plot/Plot.h
   - /src/Plot/Plot.cpp
 
-2. Compilación (generan carpeta /build):
+3. Compilación (generan carpeta /build):
   - /Makefile
 
 4. Ejecutables perceptrón:
