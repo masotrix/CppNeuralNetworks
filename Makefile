@@ -1,74 +1,98 @@
 CC=g++
-CFLAGS=-std=c++14 -g -INeuron/src -IPlot
+CFLAGS=-std=c++14 -g -Isrc -Isrc/Plot -Isrc/Dataset
 CFLAGS+=`pkg-config --cflags --libs opencv`
-PERBUILD= Neuron/build/Perceptron
-SIGMBUILD= Neuron/build/SigmoidNeuron
-NEUSRC= Neuron/src
-PERSRC= Neuron/src/Perceptron
-SIGMSRC= Neuron/src/SigmoidNeuron
-NEUDEPS= $(NEUSRC)/Neuron.h Plot/Plot.h
-NEUBASEOBJ= $(NEUSRC)/Neuron.o
-PLOTOBJ= Plot/Plot.o
-PERTRAINOBJ= $(NEUBASEOBJ) $(PERSRC)/testTrain/testTrain.o
-SIGMTRAINOBJ= $(NEUBASEOBJ) $(SIGMSRC)/testTrain/testTrain.o
+MKDIR_P= mkdir -p
+
+NEUDEPS= src/Neuron.h src/Plot/Plot.h src/Dataset/Dataset.h
+NEUBASEOBJ= src/Neuron.o
+PLOTOBJ= src/Plot/Plot.o
+DATASETOBJ= src/Dataset/Dataset.o
+
+PERSRC= src/Perceptron
+PERBUILD= build/Perceptron
+SIGMSRC= src/SigmoidNeuron
+SIGMBUILD= build/SigmoidNeuron
+NETSRC= src/Network
+NETWORKBUILD= build/Network
+
+
 PERBINARYOPOBJ= $(NEUBASEOBJ) \
 								$(PERSRC)/testBinaryOp/testBinaryOp.o
 PERSUMGATEOBJ= $(NEUBASEOBJ) \
 							 $(SIGMSRC)/testSumGate/testSumGate.o
+PERTRAINOBJ= $(NEUBASEOBJ) $(PERSRC)/testTrain/testTrain.o
+PERDATAOBJ= $(PERSRC)/testTrain/generateData.o
+PERTRAINPLOTOBJ= $(NEUBASEOBJ) $(PLOTOBJ) \
+								 $(PERSRC)/testTrain/testTrainPlot.o
+
 SIGMBINARYOPOBJ= $(NEUBASEOBJ) \
 								$(SIGMSRC)/testBinaryOp/testBinaryOp.o
 SIGMSUMGATEOBJ= $(NEUBASEOBJ) \
 								$(SIGMSRC)/testSumGate/testSumGate.o
-PERTRAINPLOTOBJ= $(NEUBASEOBJ) $(PLOTOBJ) \
-								 $(PERSRC)/testTrain/testTrainPlot.o
 SIGMTRAINPLOTOBJ= $(NEUBASEOBJ) $(PLOTOBJ) \
 								 $(SIGMSRC)/testTrain/testTrainPlot.o
-PERDATAOBJ= $(PERSRC)/testTrain/generateData.o
+SIGMTRAINOBJ= $(NEUBASEOBJ) $(SIGMSRC)/testTrain/testTrain.o
 SIGMDATAOBJ= $(SIGMSRC)/testTrain/generateData.o
 
+NETWORKTRAINOBJ = $(NEUBASEOBJ) $(DATASETOBJ) $(PLOTOBJ) \
+									$(NETSRC)/trainNetwork.o
+
 all: \
+	perdirs \
 	$(PERBUILD)/testTrain/testTrain \
 	$(PERBUILD)/testTrain/generateData \
 	$(PERBUILD)/testBinaryOp/testBinaryOp \
 	$(PERBUILD)/testSumGate/testSumGate \
 	$(PERBUILD)/testTrain/testTrainPlot \
+	sigmdirs \
 	$(SIGMBUILD)/testTrain/testTrain \
 	$(SIGMBUILD)/testTrain/generateData \
 	$(SIGMBUILD)/testBinaryOp/testBinaryOp \
 	$(SIGMBUILD)/testSumGate/testSumGate \
-	$(SIGMBUILD)/testTrain/testTrainPlot
+	$(SIGMBUILD)/testTrain/testTrainPlot \
+	netdirs \
+	$(NETWORKBUILD)/testTrain/trainNetwork
+
 
 %.o: %.cpp $(NEUDEPS)
 	$(CC) $< -c -o $@ $(CFLAGS)
 
-$(PERBUILD)/testTrain/testTrain: $(PERTRAINOBJ)
-	$(CC) $^ -o $@ $(CFLAGS)
-
-$(PERBUILD)/testTrain/generateData: $(PERDATAOBJ)
-	$(CC) $^ -o $@ $(CFLAGS)
-
+perdirs: 
+	${MKDIR_P} \
+  $(PERBUILD)/testBinaryOp \
+  $(PERBUILD)/testSumGate \
+  $(PERBUILD)/testTrain
 $(PERBUILD)/testBinaryOp/testBinaryOp: $(PERBINARYOPOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
-
 $(PERBUILD)/testSumGate/testSumGate: $(PERSUMGATEOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
-
+$(PERBUILD)/testTrain/testTrain: $(PERTRAINOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
+$(PERBUILD)/testTrain/generateData: $(PERDATAOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
 $(PERBUILD)/testTrain/testTrainPlot: $(PERTRAINPLOTOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
 
-$(SIGMBUILD)/testTrain/testTrain: $(SIGMTRAINOBJ)
-	$(CC) $^ -o $@ $(CFLAGS)
-
-$(SIGMBUILD)/testTrain/generateData: $(SIGMDATAOBJ)
-	$(CC) $^ -o $@ $(CFLAGS)
-
+sigmdirs: 
+	${MKDIR_P} \
+  $(SIGMBUILD)/testBinaryOp \
+  $(SIGMBUILD)/testSumGate \
+  $(SIGMBUILD)/testTrain
 $(SIGMBUILD)/testBinaryOp/testBinaryOp: $(SIGMBINARYOPOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
-
 $(SIGMBUILD)/testSumGate/testSumGate: $(SIGMSUMGATEOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
-
+$(SIGMBUILD)/testTrain/testTrain: $(SIGMTRAINOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
+$(SIGMBUILD)/testTrain/generateData: $(SIGMDATAOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
 $(SIGMBUILD)/testTrain/testTrainPlot: $(SIGMTRAINPLOTOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
+
+netdirs:
+	${MKDIR_P} \
+  $(NETWORKBUILD)/testTrain
+$(NETWORKBUILD)/testTrain/trainNetwork: $(NETWORKTRAINOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
 
 .PHONY: clean
