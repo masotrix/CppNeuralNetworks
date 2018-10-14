@@ -91,7 +91,7 @@ Conclusiones:
 ## Ejercicio 4 (Neural Network)
 
 Implementación gráfico de entrenamiento (loss)
-  /src/Network/trainNetwork.cpp
+  - /src/Network/trainNetwork.cpp
   
 Ejecutable gráfico de entrenamiento
   - /build/Network/testTrain/trainNetwork
