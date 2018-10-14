@@ -20,6 +20,11 @@
 
 4. Ejecutables sigmoid neuron:
   - /Neuron/build/SigmoidNeuron
+  
+<b>Notas</b>
+
+  - C++ OpenCV 3.4 es utilizado para realizar gráficos.
+  - Ejecutables de testeo entregan output si hubo algún error.
 
 ## Ejercicio 1 (Perceptron binary operations)
 
@@ -34,6 +39,11 @@ Ejecutable para testear operaciones bianarias:
 
 Ejecutable para testear sum gate:
   - /Neuron/build/Perceptron/testSumGate/testSumGate
+  
+Conclusiones:
+  - El perceptron es capaz de implementar compuertas lógicas
+  simples como AND, OR y NAND. Por otro lado, más de uno deben
+  ser combinados para generar compuertas más complejas como XOR.
 
 ## Ejercicio 2 (Perceptron Training)
 
@@ -42,7 +52,11 @@ Implementación gráficos de distribución y entrenamiento
   
 Ejecutable para generar gráficos de distribución y entrenamiento
   - /Neuron/build/Perceptron/testTrain/testTrainPlot
-
+  
+Conclusiones:
+  - El perceptrón no parece ser afectado por cambios en la tasa de
+  aprendizaje.
+  
 ## Ejercicio 3 (Sigmoid Neuron binary operations and training)
 
 Implementación de Testeo de operaciones binarias (AND,OR,NAND,SUM): 
@@ -63,3 +77,8 @@ Implementación gráficos de distribución y entrenamiento
 Ejecutable para generar gráficos de distribución y entrenamiento
   - /Neuron/build/SigmoidNeuron/testTrain/testTrainPlot
 
+Conclusiones:
+  - La neurona sigmoide es capaz de implementar compuertas lógicas
+  simples y, al combinar más de una, compuertas lógicas complejas.
+  - El aprendizaje de la neurona sigmoide demuestra una sensibilidad
+  muy alta a la tasa de aprendizaje, contrariamente al perceptrón.
