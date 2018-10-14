@@ -29,7 +29,7 @@
   - C++ OpenCV 3.4 es utilizado para realizar gráficos.
   - Ejecutables de testeo entregan output si hubo algún error.
   - Ejecutables solo disponibles luego de compilación
-  - Makefile asume ambiente Unix
+  - Makefile asume ambiente Unix (se espera generalizar en versión posterior)
 
 ## Ejercicio 1 (Perceptron binary operations)
 
