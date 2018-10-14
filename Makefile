@@ -57,6 +57,9 @@ all: \
 %.o: %.cpp $(NEUDEPS)
 	$(CC) $< -c -o $@ $(CFLAGS)
 
+builddir:
+	${MKDIR_P} build
+
 perdirs: 
 	${MKDIR_P} \
   $(PERBUILD)/testBinaryOp \
