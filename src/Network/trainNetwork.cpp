@@ -30,8 +30,8 @@ int main() {
   auto nn = make_unique<NeuralNetwork>(move(layers));
 
   vector<vector<vector<float>>> weights;
-  vector<vector<float>> X,Y;
-  tie(X,Y) = rd->getTrainingExamples();
+  vector<vector<pair<vector<float>,vector<float>>>> X;
+  X = rd->getTrainingExamples(2);
   /*weights = {{{-0.4075,0.7333},{-1.0264,0.7863}},
    {{-0.2433,1.2113},{0.1963,-0.8431}},
    {{-0.7903,-0.1687},{-1.1256,-0.0185}}};
@@ -41,10 +41,10 @@ int main() {
   Y = {{1,0},{0,1},{1,0}};*/
 
   vector<float> loss;
-  nn->train(X,Y,0.1,EPOCHS,loss);
+  nn->train(X,0.1,EPOCHS,loss);
 
   //cout << nn->test(X,Y) << endl;
-  vector<float> y_pred = nn->forward({X[0]});
+  //vector<float> y_pred = nn->forward({X[0]});
 
   vector<vector<float>> lossCoords;
   for (int j=0; j<loss.size(); j++)

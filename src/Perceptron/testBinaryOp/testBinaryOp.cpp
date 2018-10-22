@@ -12,11 +12,11 @@ int main() {
     {{0,0},{0,1},{1,0},{1,1}};
   
   auto andPer = make_unique<ANDPerceptron>();
-  andPer->test(bitwiseX, {0.0,0.0,0.0,1.0}, true, "&& Test");
+  andPer->test(bitwiseX,{0,0,0,1},true,"&& Test");
 
   auto orPer = make_unique<ORPerceptron>();
-  orPer->test(bitwiseX, {0.0,1.0,1.0,1.0}, true, "|| Test");
+  orPer->test(bitwiseX,{0,1,1,1}, true, "|| Test");
 
   auto nandPer = make_unique<NANDPerceptron>();
-  nandPer->test(bitwiseX, {1.0,1.0,1.0,0.0}, true, "NAND Test");
+  nandPer->test(bitwiseX,{1,1,1,0}, true, "NAND Test");
 }

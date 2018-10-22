@@ -34,8 +34,12 @@ SIGMTRAINPLOTOBJ= $(NEUBASEOBJ) $(PLOTOBJ) \
 SIGMTRAINOBJ= $(NEUBASEOBJ) $(SIGMSRC)/testTrain/testTrain.o
 SIGMDATAOBJ= $(SIGMSRC)/testTrain/generateData.o
 
+NETWORKUNITOBJ = $(NEUBASEOBJ) \
+									$(NETSRC)/unitTests.o
 NETWORKTRAINOBJ = $(NEUBASEOBJ) $(DATASETOBJ) $(PLOTOBJ) \
 									$(NETSRC)/trainNetwork.o
+NETWORKTASKONEOBJ = $(NEUBASEOBJ) $(DATASETOBJ) $(PLOTOBJ) \
+									$(NETSRC)/task1.o
 
 all: \
 	perdirs \
@@ -51,7 +55,9 @@ all: \
 	$(SIGMBUILD)/testSumGate/testSumGate \
 	$(SIGMBUILD)/testTrain/testTrainPlot \
 	netdirs \
-	$(NETWORKBUILD)/testTrain/trainNetwork
+	$(NETWORKBUILD)/unitTests/unitTests \
+	$(NETWORKBUILD)/testTrain/trainNetwork \
+	$(NETWORKBUILD)/task1/task1
 
 
 %.o: %.cpp $(NEUDEPS)
@@ -94,8 +100,14 @@ $(SIGMBUILD)/testTrain/testTrainPlot: $(SIGMTRAINPLOTOBJ)
 
 netdirs:
 	${MKDIR_P} \
-  $(NETWORKBUILD)/testTrain
+  $(NETWORKBUILD)/unitTests \
+  $(NETWORKBUILD)/testTrain \
+  $(NETWORKBUILD)/task1
+$(NETWORKBUILD)/unitTests/unitTests: $(NETWORKUNITOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
 $(NETWORKBUILD)/testTrain/trainNetwork: $(NETWORKTRAINOBJ)
+	$(CC) $^ -o $@ $(CFLAGS)
+$(NETWORKBUILD)/task1/task1: $(NETWORKTASKONEOBJ)
 	$(CC) $^ -o $@ $(CFLAGS)
 
 .PHONY: clean

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <chrono>
 using namespace std;
 
 static default_random_engine gen;
@@ -15,7 +16,7 @@ static void printVec(const vector<float> &x) {
 Neuron::Neuron(const int inputs, function<float(float)> act,
     function<float(float)> dact):
   _weights(vector<float>(inputs,0)),
-  _wgrads(vector<float>(inputs)),
+  _wgrads(vector<float>(inputs,0)),
   _bgrad(0), _s(0),
   _x(vector<float>(inputs)),
   _bias(0), _act(act), _dact(dact) {}
@@ -23,7 +24,7 @@ Neuron::Neuron(const int inputs, function<float(float)> act,
 Neuron::Neuron(const int inputs, const float std,
     function<float(float)> act, function<float(float)> dact):
   _weights(vector<float>(inputs,0)),
-  _wgrads(vector<float>(inputs)),
+  _wgrads(vector<float>(inputs,0)),
   _bgrad(0), _s(0),
   _x(vector<float>(inputs)),
   _bias(0), _act(act), _dact(dact) {
@@ -36,7 +37,7 @@ Neuron::Neuron(const int inputs, const float std,
 Neuron::Neuron(const vector<float> &weights, float bias,
     function<float(float)> act, function<float(float)> dact):
   _weights(weights), 
-  _wgrads(vector<float>(weights.size())),
+  _wgrads(vector<float>(weights.size(),0)),
   _bgrad(0), _s(0),
   _x(vector<float>(weights.size())),
   _bias(bias), _act(act), _dact(dact) {}
@@ -48,50 +49,55 @@ float Neuron::forward(const vector<float> &x) {
   return _act(_s+_bias);
 }
 
-void Neuron::backward(float y, float y_pred) {
-  float diff = y_pred-y;
-  for (int i=0; i<_weights.size(); i++)
-    _wgrads[i] = diff*_dact(_s)*_x[i];
-  _bgrad = diff*_dact(_s);
-
-}
-
-vector<float> Neuron::backout(float e) {
+vector<float> Neuron::backward(float e) {
   vector<float> ye(_x.size());
   float delta = e*_dact(_s); _bgrad = delta;
   for (int i=0, s=_x.size(); i<s; i++) {
-    _wgrads[i] = delta*_x[i];
+    _wgrads[i] += delta*_x[i];
     ye[i] = delta*_weights[i];
   }
-  /*cout << "Neurona:\n";
-  cout << "Gradientes capa: ";
-  printVec(_wgrads);
-  cout << "Pesos capa: ";
-  printVec(_weights);*/
   return ye;
 }
 
 void Neuron::step(float lr) {
-  for (int i=0; i<_weights.size(); i++) {
-    /*cout << "Peso-gradiente: " <<
-      _weights[i] <<" - "<<_wgrads[i];*/
+  for (int i=0; i<_weights.size(); i++)
     _weights[i] -= lr*_wgrads[i];
-    //cout <<" = "<<_weights[i]<<endl;
-  }
   _bias -= lr*_bgrad;
+
+  _wgrads = vector<float>(_wgrads.size(),0);
+  _bgrad = 0;
 }
 
 void Neuron::train(const vector<vector<float>> &X,
     const vector<float> &Y, float lr, int EPOCHS,
     vector<float> &loss) {
 
-  float y_pred;
+  float y_pred, error;
   for (int ep=0; ep<EPOCHS; ep++) {
     for (int i=0; i<X.size(); i++) {
       y_pred = forward(X[i]);
-      backward(Y[i], y_pred);
-      loss.push_back(pow(y_pred-Y[i],2));
+      error = y_pred-Y[i];
+      backward(error);
+      loss.push_back(pow(error,2));
       step(lr);
+    }
+  }
+}
+void Neuron::train(
+    const vector<vector<pair<vector<float>,float>>> &X,
+    float lr, int EPOCHS, vector<float> &loss) {
+
+  float y_pred, error, e;
+  for (int ep=0; ep<EPOCHS; ep++) {
+    for (int i=0; i<X.size(); i++) {
+      error = 0;
+      for (int j=0; j<X[i].size(); j++) {
+        y_pred = forward(X[i][j].first);
+        e = y_pred-X[i][j].second; error += e;
+        backward(e);
+      }
+      loss.push_back(pow(error/X[i].size(),2));
+      step(lr/X[i].size());
     }
   }
 }
@@ -107,7 +113,8 @@ float Neuron::test(const vector<vector<float>> &X,
     } else {
       if (debug) {
         cout << funcName;
-        cout << "Input: " <<'('<<X[i][0]<<','<<X[i][1]<<") ";
+        cout << "Input: " <<'('<<X[i][0]<<','
+          <<X[i][1]<<") ";
         cout << "Predicted: " << y_pred << " ";
         cout << "True: " << Y[i] << endl;
       }
@@ -115,11 +122,41 @@ float Neuron::test(const vector<vector<float>> &X,
   }
   return success/tot;
 }
-void Neuron::loadWeights(
-    const vector<float> &weights) {
-  for (int i=0, wsize=_weights.size(); i<wsize; i++) {
-    _weights[i] = weights[i];
+float Neuron::test(const vector<pair<
+    vector<float>,float>> &X,
+    bool debug, string funcName) {
+
+  float success=0, tot=X.size(), y_pred;
+  for (int i=0; i<X.size(); i++) {
+    y_pred = forward(X[i].first);
+    if (y_pred==X[i].second) {
+      success++;
+    } else {
+      if (debug) {
+        cout << funcName;
+        cout << "Input: " <<'('<<X[i].first[0]<<','
+          <<X[i].first[1]<<") ";
+        cout << "Predicted: " << y_pred << " ";
+        cout << "True: " << X[i].second << endl;
+      }
+    }
   }
+  return success/tot;
+}
+pair<vector<float>,float> Neuron::getWeights() {
+
+  pair<vector<float>,float> weights_bss;
+  for (int i=0, lsize=_weights.size(); i<lsize; i++)
+    weights_bss.first.push_back(_weights[i]);
+  weights_bss.second = _bias;
+
+  return weights_bss;
+}
+void Neuron::setWeights(
+    const pair<vector<float>,float> &weights_bss) {
+  for (int i=0, wsize=_weights.size(); i<wsize; i++)
+    _weights[i] = weights_bss.first[i];
+  _bias = weights_bss.second;
 }
 
 static function<float(float)> sigmoidAct =
@@ -246,9 +283,9 @@ static vector<float> sumfv(vector<float> &v1,
 }
 template <class T> vector<float> NeuralLayer<T>::backward(
     const vector<float> &xe) {
-  vector<float> ye = _neurons[0]->backout(xe[0]);
+  vector<float> ye = _neurons[0]->backward(xe[0]);
   for (int i=1, size=_neurons.size(); i<size; i++)
-    sumfv(ye,_neurons[i]->backout(xe[i]));
+    sumfv(ye,_neurons[i]->backward(xe[i]));
   return ye;
 }
 template <class T> void NeuralLayer<T>::step(float lr) {
@@ -264,10 +301,19 @@ template <class T> NeuralLayer<T>::NeuralLayer(const int inputs,
     _neurons.push_back(move(neuron));
   }
 }
-template <class T> void NeuralLayer<T>::loadWeights(
-    const vector<vector<float>> &weights) {
+template <class T> vector<pair<vector<float>,float>> 
+  NeuralLayer<T>::getWeights() {
+
+  vector<pair<vector<float>,float>> weights_bss;
+  for (int i=0, lsize=_neurons.size(); i<lsize; i++)
+    weights_bss.push_back(_neurons[i]->getWeights());
+
+  return weights_bss;
+}
+template <class T> void NeuralLayer<T>::setWeights(
+    const vector<pair<vector<float>,float>> &weights_bss) {
   for (int i=0, nsize=_neurons.size(); i<nsize; i++) {
-    _neurons[i]->loadWeights(weights[i]);
+    _neurons[i]->setWeights(weights_bss[i]);
   }
 }
 SigmoidLayer::SigmoidLayer(const int inputs, const int neurons):
@@ -318,50 +364,84 @@ vector<float> NeuralNetwork::forward(const vector<float> &x) {
     y_pred = _layers[j]->forward(y_pred);
   return y_pred;
 }
-void NeuralNetwork::backward(vector<float> error, float lr) {
+vector<float> NeuralNetwork::backward(vector<float> error) {
   
-  for (int j=_layers.size()-1; j>=0; j--) {
+  for (int j=_layers.size()-1; j>=0; j--)
     error = _layers[j]->backward(error);
+
+  return error;
+}
+void NeuralNetwork::step(float lr) {
+  
+  for (int j=_layers.size()-1; j>=0; j--)
     _layers[j]->step(lr);
-  }
 }
 void NeuralNetwork::train(const vector<vector<float>> &X,
     const vector<vector<float>> &Y, float lr, int EPOCHS,
-    vector<float> &loss) {
+    vector<float> &loss, bool shuff) {
   
   vector<float> y_pred;
   for (int e=0; e<EPOCHS; e++) {
+    //if (shuff) shuffle(gen);
     for (int i=0, xsize=X.size(); i<xsize; i++) {
       y_pred = forward(X[i]);
       loss.push_back(cross_entropyfv(Y[i], y_pred));
-      backward(subfv(y_pred, Y[i]), lr);
+      backward(subfv(y_pred, Y[i]));
+      step(lr);
+    }
+  }
+}
+void NeuralNetwork::train(
+    vector<vector<pair<vector<float>,vector<float>>>> &X,
+    float lr, int EPOCHS, vector<float> &loss, bool shuff) {
+  
+  vector<float> y_pred;
+  for (int e=0; e<EPOCHS; e++) {
+    if (shuff) shuffle(X.begin(),X.end(),gen);
+    for (int i=0, xsize=X.size(); i<xsize; i++) {
+      for (int j=0, bsize=X[i].size(); j<bsize; j++) { 
+        y_pred = forward(X[i][j].first);
+        loss.push_back(cross_entropyfv(X[i][j].second, y_pred));
+        backward(subfv(y_pred, X[i][j].second));
+      }
+      step(lr/X[i].size());
     }
   }
 }
 static int maxIdxfv(const vector<float> &v){
   return distance(v.begin(),max_element(v.begin(),v.end()));
 }
-float NeuralNetwork::test(const vector<vector<float>> &X,
-    const vector<vector<float>> &Y) {
+float NeuralNetwork::test(const vector<pair<
+    vector<float>,vector<float>>> &X) {
 
   float success, tot=X.size();
   vector<float> y_pred;
   for (int i=0; i<tot; i++) {
-    y_pred = X[i];
+    y_pred = X[i].first;
     for (int j=0, lsize=_layers.size(); j<lsize; j++)
       y_pred = _layers[j]->forward(y_pred);
 
-    if (maxIdxfv(y_pred)==maxIdxfv(Y[i]))
+    if (maxIdxfv(y_pred)==maxIdxfv(X[i].second))
       success++;
   }
 
   return success/tot;
 }
 
-void NeuralNetwork::loadWeights(
-    const vector<vector<vector<float>>> &weights) {
+vector<vector<pair<vector<float>,float>>> 
+  NeuralNetwork::getWeights() {
+
+  vector<vector<pair<vector<float>,float>>> weights_bss;
+  for (int i=0, lsize=_layers.size(); i<lsize; i++)
+    weights_bss.push_back(_layers[i]->getWeights());
+
+  return weights_bss;
+}
+
+void NeuralNetwork::setWeights(const vector<vector<pair<
+    vector<float>,float>>> &weights_bss) {
 
   for (int i=0, lsize=_layers.size(); i<lsize; i++) {
-    _layers[i]->loadWeights(weights[i]);
+    _layers[i]->setWeights(weights_bss[i]);
   }
 }
