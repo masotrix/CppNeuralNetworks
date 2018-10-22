@@ -6,6 +6,7 @@
 #include <vector>
 #include <sstream>
 #include <iomanip>
+#include <chrono>
 #include <opencv2/core.hpp>
 using namespace std;
 using namespace cv;
@@ -18,6 +19,8 @@ static void printVec(const vector<float> &x) {
 int main() {
 
   float prop = 0.2;
+  chrono::time_point<chrono::system_clock> start,end;
+  chrono::duration<double> seconds;
 
   { // Show different layers
 
@@ -39,7 +42,11 @@ int main() {
     auto soft1 = make_unique<SoftMaxLayer>(F,C);
     layers1.push_back(move(soft1));
     auto nn1 = make_unique<NeuralNetwork>(move(layers1));
+    start = chrono::system_clock::now();
     nn1->train(Xtr,lr,EPOCHS,loss1,true);
+    end = chrono::system_clock::now();
+    seconds = end-start;
+    cout << "Time conf1: " << seconds.count() << " seconds\n";
     for (int i=0; i<loss1.size(); i++) maxi1=max(maxi1,loss1[i]);
     acc1 = 100*nn1->test(Xte);
     for (int j=0; j<loss1.size(); j++)
@@ -50,7 +57,11 @@ int main() {
     layers2.push_back(move(sig2));
     layers2.push_back(move(soft2));
     auto nn2 = make_unique<NeuralNetwork>(move(layers2));
+    start = chrono::system_clock::now();
     nn2->train(Xtr,lr,EPOCHS,loss2,true);
+    end = chrono::system_clock::now();
+    seconds = end-start;
+    cout << "Time conf2: " << seconds.count() << " seconds\n";
     for (int i=0; i<loss2.size(); i++) maxi2=max(maxi2,loss2[i]);
     acc2 = 100*nn2->test(Xte);
     for (int j=0; j<loss2.size(); j++)
@@ -63,7 +74,11 @@ int main() {
     layers3.push_back(move(sig32));
     layers3.push_back(move(soft3));
     auto nn3 = make_unique<NeuralNetwork>(move(layers3));
+    start = chrono::system_clock::now();
     nn3->train(Xtr,lr,EPOCHS,loss3,true);
+    end = chrono::system_clock::now();
+    seconds = end-start;
+    cout << "Time conf3: " << seconds.count() << " seconds\n";
     for (int i=0; i<loss3.size(); i++) maxi3=max(maxi3,loss3[i]);
     acc3 = 100*nn3->test(Xte);
     for (int j=0; j<loss3.size(); j++)
@@ -78,7 +93,11 @@ int main() {
     layers4.push_back(move(sig43));
     layers4.push_back(move(soft4));
     auto nn4 = make_unique<NeuralNetwork>(move(layers4));
+    start = chrono::system_clock::now();
     nn4->train(Xtr,lr,EPOCHS,loss4,true);
+    end = chrono::system_clock::now();
+    seconds = end-start;
+    cout << "Time conf4: " << seconds.count() << " seconds\n";
     for (int i=0; i<loss4.size(); i++) maxi4=max(maxi4,loss4[i]);
     acc4 = 100*nn4->test(Xte);
     for (int j=0; j<loss4.size(); j++)
