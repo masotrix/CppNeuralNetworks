@@ -97,3 +97,17 @@ Ejecutable gráfico de entrenamiento
   - /build/Network/testTrain/trainNetwork
   
   
+## Tarea 1 (Dataset)
+
+Implementación Unit Tests
+  - /src/Network/unitTests.cpp
+  
+Ejecutable Unit Tests
+  - /build/Network/unitTests/unitTests
+
+Implementación tarea
+  - /src/Network/task1.cpp
+  
+Ejecutable tarea
+  - /build/Network/task1/task1
+  
